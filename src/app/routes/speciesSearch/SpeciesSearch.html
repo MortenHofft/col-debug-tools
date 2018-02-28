@@ -5,155 +5,85 @@
                 md-selected-nav-item="$ctrl.currentNavItem"
                 nav-bar-aria-label="navigation links">
             <md-nav-item md-nav-href="#" name="tool">
-                Dataset ingestion history
-            </md-nav-item>
-            <md-nav-item md-nav-href="#" name="about">
-                About
+                Species search
             </md-nav-item>
         </md-nav-bar>
 
-        <div ng-show="$ctrl.currentNavItem == 'tool'">
-            <div ng-if="!$ctrl.rowCollection">
-                <div layout-gt-xs="row" layout-padding>
-                    <md-autocomplete flex-gt-xs
-                            ng-disabled="$ctrl.isDisabled"
-                            md-no-cache="$ctrl.noCache"
-                            md-selected-item="$ctrl.selectedItem"
-                            md-search-text-change="$ctrl.searchTextChange($ctrl.searchText)"
-                            md-search-text="$ctrl.searchText"
-                            md-selected-item-change="$ctrl.selectedItemChange(item)"
-                            md-items="item in $ctrl.querySearch($ctrl.searchText)"
-                            md-item-text="item.title"
-                            md-min-length="0"
-                            placeholder="Select a dataset">
-                        <md-item-template>
-                            <span md-highlight-text="$ctrl.searchText" md-highlight-flags="^i">{{item.title}}</span>
-                        </md-item-template>
-                        <md-not-found>
-                            No states matching "{{$ctrl.searchText}}" were found.
-                            <a ng-click="$ctrl.newState($ctrl.searchText)">Create a new one!</a>
-                        </md-not-found>
-                    </md-autocomplete>
-
+        <div>
+            <md-content layout-wrap layout-gt-sm="row" layout-padding class="white">
+                <md-input-container flex-gt-sm="50">
+                    <label>Search table</label>
+                    <input ng-model="$ctrl.state.q">
+                </md-input-container>
+                <md-input-container flex="initial" style="width:200px">
+                    <label>Dataset key</label>
+                    <input ng-model="$ctrl.state.datasetKey">
+                </md-input-container>
+                <md-input-container>
+                    <label>Rank</label>
+                    <md-select ng-model="$ctrl.state.rank">
+                        <md-option ng-repeat="rank in $ctrl.ranks" ng-value="rank">
+                            {{rank}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div>
+                    <md-button class="md-raised md-primary" ng-click="$ctrl.search()">Search</md-button>
                 </div>
-                <div layout-gt-xs="row" layout-padding>
-                    <md-input-container class="md-block" flex-gt-xs>
-                        <label>Or enter a dataset UUID</label>
-                        <input ng-model="$ctrl.uuid" ng-change="$ctrl.inputChanged($ctrl.uuid)">
-                    </md-input-container>
-                </div>
-
-                <md-content ng-if="$ctrl.$localStorage.crawlHistoryUUID.length > 0" padding class="white">
-                    <md-list flex>
-                        <md-subheader class="md-no-sticky">Recently visited</md-subheader>
-                        <md-list-item class="md-3-line" ng-repeat="item in $ctrl.$localStorage.crawlHistoryUUID" ng-click="$ctrl.inputChanged(item.key)">
-                            <div class="md-list-item-text" layout="column">
-                                <h3>{{ item.title }}</h3>
-                            </div>
-                        </md-list-item>
-                    </md-list>
-                </md-content>
+            </md-content>
+            <md-divider></md-divider>
+        </div>
+        <div>
+            <div class="table-container">
+                <table class="gb-table-linked table-striped">
+                    <thead>
+                        <th>ScientificName</th>
+                        <th>Key</th>
+                        <th>Dataset</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat-start="item in $ctrl.searchResults.result">
+                        <td>{{item.scientificName}}</td>
+                        <td>
+                            <a href="/species/{{item.key}}">{{item.key}}</a>
+                        </td>
+                        <td>{{item.datasetKey}}</td>
+                        <td class="text-right whiteSpace-nowrap">
+                            <span   ng-click="$ctrl.expandedRowMap[$index] = !$ctrl.expandedRowMap[$index]"
+                                    class="btnLink">
+                                <i class="material-icons">more_vert</i>
+                                <md-tooltip md-direction="top">Details</md-tooltip>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end ng-if="$ctrl.expandedRowMap[$index]">
+                        <td colspan="9">
+                            <code>
+                                <pre>{{dataset | json : spacing}}
+                                </pre>
+                            </code>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <md-content class="md-padding white" ng-if="$ctrl.rowCollection">
-                <md-card-title>
-                    <md-card-title-text>
-                        <span class="md-headline">{{ $ctrl.dataset.title}}</span>
-                        <span class="md-subhead">{{ $ctrl.dataset.key}}</span>
-                        <span class="md-subhead" ng-if="$ctrl.dataset.deleted">This dataset was deleted {{ $ctrl.dataset.deleted | amDateFormat:'YYYY-MM-DD HH:mm'}}</span>
-                        <span class="md-subhead">{{ $ctrl.occurrences.count | localNumber }} occurrences in the GBIF index
-                            <span ng-if="$ctrl.isOutOfSync($ctrl.occurrences.count)" class="badge-red">
-                                Out of sync
-                                <md-tooltip md-direction="top">Last NORMAL ingestion process received count doesn't equal occurrence index count</md-tooltip>
-                            </span>
-                        </span>
-                    </md-card-title-text>
-                </md-card-title>
-                <div>
-                    <span ng-if="$ctrl.rowCollection.count > $ctrl.limit" class="badge-green">
-                        Showing last {{$ctrl.limit}} ingestions out of {{$ctrl.rowCollection.count}}
-                    </span>
-                </div>
-                <div layout-wrap layout-gt-sm="row" >
-                    <md-input-container  flex-gt-sm="50">
-                        <md-checkbox ng-model="$ctrl.showAll" ng-change="$ctrl.updateShowAll($ctrl.showAll)" aria-label="Show all">
-                            Show details
-                        </md-checkbox>
-                    </md-input-container>
-                    <div flex-gt-sm="50">
-                        <md-card-actions layout="row" layout-align="end center">
-                            <md-button ng-click="$ctrl.clearDataset()">Clear</md-button>
-                            <md-button ng-href="https://gbif.org/dataset/{{$ctrl.dataset.key}}">Go to dataset</md-button>
-                        </md-card-actions>
-                    </div>
-                </div>
-                <md-divider></md-divider>
-                <div class="table-container">
-                    <table class="gb-table-linked table-striped">
-                        <thead>
-                        <tr>
-                            <th>Started</th>
-                            <th>Finished <abbr title="“Crawling” refers only to the downloading of the data, it does not include the processing. How long this takes is only interesting for XML datasets.">download</abbr></th>
-                            <th>Duration</th>
-                            <th ng-show="$ctrl.showAll">Finish reason</th>
-                            <th class="text-right" ng-show="$ctrl.showAll">Recieved</th>
-                            <th class="text-right">New</th>
-                            <th class="text-right">Updated</th>
-                            <th class="text-right">Unchanged</th>
-                            <th class="text-right" ng-show="$ctrl.showAll">Failed</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat-start="row in $ctrl.rowCollection.results" ng-if="$ctrl.showAll || row.finishReason === 'NORMAL'">
-                            <td>{{row.startedCrawling | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
-                            <td>{{row.finishedCrawling | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
-                            <td>{{$ctrl.getDuration(row) | amDurationFormat : 'hours'}}</td>
-                            <td ng-show="$ctrl.showAll">{{ row.finishReason }}</td>
-                            <td class="text-right" ng-show="$ctrl.showAll">
-                                <span ng-if="row.fragmentsReceived - row.rawOccurrencesPersistedNew -row.rawOccurrencesPersistedUpdated - row.rawOccurrencesPersistedUnchanged - row.rawOccurrencesPersistedError == 0">{{row.fragmentsReceived | localNumber}}</span>
-                                <span class="badge-red"
-                                      ng-if="row.fragmentsReceived - row.rawOccurrencesPersistedNew -row.rawOccurrencesPersistedUpdated - row.rawOccurrencesPersistedUnchanged - row.rawOccurrencesPersistedError != 0">
-                                        {{row.fragmentsReceived | localNumber}}
-                                        <md-tooltip md-direction="top">Received fragments expected to equal New + Updated + Unchanged + Errors</md-tooltip>
-                                    </span>
-                            </td>
-                            <td class="text-right">{{row.rawOccurrencesPersistedNew | localNumber}}</td>
-                            <td class="text-right">{{row.rawOccurrencesPersistedUpdated | localNumber}}</td>
-                            <td class="text-right">{{row.rawOccurrencesPersistedUnchanged | localNumber}}</td>
-                            <td class="text-right" ng-show="$ctrl.showAll">
-                                <span ng-class="{'badge-red': row.rawOccurrencesPersistedError > 0}">{{row.rawOccurrencesPersistedError | localNumber}}</span>
-                            </td>
-                            <td class="text-right">
-                                <span ng-click="$ctrl.expandedRowMap[$index] = !$ctrl.expandedRowMap[$index]" class="btnLink">
-                                    <i class="material-icons">more_vert</i>
-                                </span>
-                            </td>
-                        </tr>
-                        <tr ng-repeat-end ng-if="$ctrl.expandedRowMap[$index] && ($ctrl.showAll || row.finishReason === 'NORMAL')">
-                            <td colspan="9">
-                                <code>
-                                    <pre>{{row | json : spacing}}
-                                    </pre>
-                                </code>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="emptyInfo" ng-if="$ctrl.errorMessage">
-                    <h3>{{$ctrl.errorMessage}}</h3>
-                </div>
-                <div class="emptyInfo" ng-if="$ctrl.rowCollection.count === 0 && !$ctrl.errorMessage">
-                    <h3>No ingestion entries for this data</h3>
-                    <p>This can be the case if the dataset hasn't been ingested since logging was introduced 6 November 2013</p>
-                </div>
-                <div class="emptyInfo" ng-if="$ctrl.rowCollection.count > 0 && $ctrl.finishReasonNormalCount == 0 && !$ctrl.showAll">
-                    <h3>No ingestion entries finished normally</h3>
-                    <p>You might want to <a href="" class="btnLink underline" ng-click="$ctrl.updateShowAll(true)">show all</a></p>
-                </div>
+            <div class="emptyInfo" ng-if="$ctrl.rowCollection.count === 0">
+                <h3>No ingestion entries for this data</h3>
+                <p>This can be the case if the dataset hasn't been ingested since logging was introduced on 6 November 2013</p>
+            </div>
+        </div>
 
-            </md-content>
+        <div>
+            <ul>
+                <li ng-repeat="item in $ctrl.searchResults.result">
+                    <h4>{{item.scientificName}}</h4>
+                    <div>
+                        <pre>{{item | json : spacing}}</pre>
+                    </div>
+                </li>
+            </ul>
         </div>
 
         <div ng-show="$ctrl.currentNavItem == 'about'">

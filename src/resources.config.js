@@ -12,7 +12,8 @@ angular
         query: {
           method: 'GET',
           isArray: false,
-          cancellable: true
+          cancellable: true,
+          cache: true
         }
       });
     });
