@@ -1,0 +1,151 @@
+$orangePeel := #ff6d00;
+@import "./table.styl"
+@import "app/routes/overcrawls/overcrawls.styl"
+@import "app/routes/currentCrawls/CurrentCrawls.styl"
+body {
+  font-size: 14px;
+  background: #f2f2f2;
+}
+
+.aboutBody {
+  max-width: 700px;
+  margin: auto;
+}
+
+.managementApp {
+  flex-grow: 1;
+  height: inherit;
+  overflow: auto;
+  position: relative;
+}
+
+.gb-nav, .gb-nav md-content {
+  background-color: #fafafa;
+  overflow: hidden;
+}
+
+header-component {
+  z-index: 5;
+  //background: orange;
+  //color: white;
+}
+
+nav-component {
+  z-index: 2;
+}
+
+.table-responsive-vertical {
+  width: 100%;
+}
+
+.card-area {
+  margin: 20px;
+}
+
+.white {
+  background: white;
+}
+
+.gb-nav .menuItem {
+  p {
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  &.isActive {
+    color: $orangePeel;
+  }
+}
+
+.text-red {
+  color: tomato;
+}
+
+.text-yellow {
+  color: orange;
+}
+
+.text-green {
+  color: darken(darkseagreen, 20);
+}
+
+.badge {
+  color: white;
+  padding: 3px 5px;
+  border-radius: 3px;
+}
+.badge-red {
+  @extends .badge
+  background: tomato;
+}
+
+.badge-yellow {
+  @extends .badge
+  background: orange;
+}
+
+.badge-green {
+  @extends .badge
+  background: darkseagreen;
+}
+
+.grey-background {
+  background: #ececec;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.navLogo {
+  border-bottom: 1px solid #ddd;
+  img {
+    width: 100px;
+    margin: auto;
+    display: block;
+    padding: 0 30px;
+  }
+}
+
+.emptyInfo {
+  color: #999;
+  text-align: center;
+  margin: 30px;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 400;
+}
+
+.btnLink {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.whiteSpace-nowrap {
+  white-space: nowrap;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.wordBreak-all {
+  word-break: break-all;
+}

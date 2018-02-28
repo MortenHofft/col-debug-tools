@@ -1,0 +1,100 @@
+<div class="card-area">
+    <!--<h2 class="md-headline">Crawl history</h2>-->
+    <md-card>
+        <md-nav-bar
+                md-no-ink-bar="disableInkBar"
+                md-selected-nav-item="$ctrl.currentNavItem"
+                nav-bar-aria-label="navigation links">
+            <md-nav-item  md-nav-click="goto('page1')"  name="tool">
+                IPT sync state
+            </md-nav-item>
+            <md-nav-item  md-nav-click="goto('page1')"  name="about">
+                About
+            </md-nav-item>
+        </md-nav-bar>
+
+        <div ng-show="$ctrl.currentNavItem == 'tool'">
+            <div layout-gt-xs="row" layout-padding ng-if="!$ctrl.rowCollection">
+                <md-input-container class="md-block" flex-gt-xs>
+                    <label>Enter an IPT url</label>
+                    <input type="text" ng-model="$ctrl.url" ng-keydown="$ctrl.searchOnEnter($event)">
+                </md-input-container>
+                <md-input-container class="md-block" ng-if="$ctrl.url">
+                    <md-button ng-click="$ctrl.getInventory($ctrl.url)" ng-if="$ctrl.url != $ctrl.currentUrl">Get inventory</md-button>
+                    <md-button ng-click="$ctrl.getInventory('')" ng-if="$ctrl.url == $ctrl.currentUrl">Clear</md-button>
+                </md-input-container>
+            </div>
+
+            <md-content ng-if="!$ctrl.currentUrl && $ctrl.$localStorage.iptUrls.length > 0" padding class="white">
+                <md-list flex>
+                    <md-subheader class="md-no-sticky">Recently visited</md-subheader>
+                    <md-list-item class="md-3-line" ng-repeat="item in $ctrl.$localStorage.iptUrls" ng-click="$ctrl.getInventory(item)">
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{ item }}</h3>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-content>
+            <md-content class="md-padding white" ng-if="$ctrl.registeredResources">
+                <md-divider></md-divider>
+                <div class="table-container">
+                    <table class="gb-table-linked table-striped">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Last published</th>
+                            <th>Source</th>
+                            <th class="text-right" title="Occurrences according to the IPT">IPT count</th>
+                            <th class="text-right" title="Occurrences in the GBIF index">GBIF count</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat-start="row in $ctrl.registeredResources">
+                            <td><a ng-href="{{$ctrl.env.portal}}/dataset/{{row.gbifKey}}">{{row.title}}</a></td>
+                            <td>{{row.lastPublished | amDateFormat:'YYYY-MM-DD'}}</td>
+                            <td><a ng-href="{{row.dwca}}" ng-if="row.dwca">DwCA</a></td>
+                            <td class="text-right">{{row.occurrenceCount | localNumber}}</td>
+                            <td class="text-right">
+                                <span ng-class="{'badge-red': row.occurrenceCount !== row._gbifCount, 'badge-green': row.occurrenceCount === row._gbifCount}">{{row._gbifCount | localNumber}}</span>
+                            </td>
+                            <td class="text-right">
+                                <span ui-sref="crawlHistory({uuid: row.gbifKey})" class="btnLink">
+                                    <i class="material-icons">timeline</i>
+                                    <md-tooltip md-direction="top">Ingestion history</md-tooltip>
+                                </span>
+                                <span ng-click="$ctrl.expandedRowMap[$index] = !$ctrl.expandedRowMap[$index]" class="btnLink">
+                                    <i class="material-icons">more_vert</i>
+                                    <md-tooltip md-direction="top">Details</md-tooltip>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end ng-if="$ctrl.expandedRowMap[$index]">
+                            <td colspan="9">
+                                <code>
+                                    <pre>{{row | json : spacing}}
+                                    </pre>
+                                </code>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </md-content>
+            <md-content ng-if="$ctrl.inventoryFetchFailure" class="md-padding white">
+                <div class="emptyInfo">
+                    <h3>Failed to get inventory</h3>
+                    <p>This might have failed due to <a href="https://github.com/gbif/ipt/issues/1344">IPT Bug 1344</a>. Please upgrade to the latest IPT to use this functionality.</p>
+                </div>
+            </md-content>
+        </div>
+
+        <div ng-show="$ctrl.currentNavItem == 'about'">
+            <md-content class="md-padding white">
+                <div ng-bind-html="$ctrl.aboutContent" class="aboutBody"></div>
+            </md-content>
+        </div>
+
+    </md-card>
+
+</div>

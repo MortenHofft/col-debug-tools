@@ -1,0 +1,100 @@
+<div class="card-area">
+    <md-card>
+        <md-nav-bar
+                md-no-ink-bar="disableInkBar"
+                md-selected-nav-item="$ctrl.currentNavItem"
+                nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-href="#" name="tool">
+                Overingested Datasets
+            </md-nav-item>
+            <md-nav-item md-nav-href="#" name="about">
+                About
+            </md-nav-item>
+        </md-nav-bar>
+
+        <div ng-show="$ctrl.currentNavItem == 'tool'">
+            <md-content class="md-padding white">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-subhead">Illustrates datasets with occurrences from multiple ingestion attempts. Totally off by {{ ($ctrl.totalRecordCount - $ctrl.totalLastCrawlCount) | localNumber }} occurrences in {{$ctrl.totalDataset | localNumber}} datasets.</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-divider></md-divider>
+                <div class="table-container">
+                    <table class="gb-table-linked table-striped">
+                        <thead>
+                        <th>Dataset</th>
+                        <th ng-repeat="col in $ctrl.columns" style="white-space: nowrap;">
+                            <a class="btnLink" href=""
+                               ng-click="$ctrl.state.sortType = col.field; $ctrl.state.sortReverse = !$ctrl.state.sortReverse">
+                                <span class="inline-block">
+                                    {{ col.title }}
+                                    <span ng-show="$ctrl.state.sortType == col.field && !$ctrl.state.sortReverse"
+                                          class="sortOrder">&#x25B2;</span>
+                                    <span ng-show="$ctrl.state.sortType == col.field && $ctrl.state.sortReverse"
+                                          class="sortOrder">&#x25BC;</span>
+                                </span>
+                            </a>
+                        </th>
+                        <th>Histogram</th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat-start="dataset in $ctrl.datasets | orderBy:$ctrl.state.sortType:$ctrl.state.sortReverse">
+                            <td><a href="http://www.gbif.org/dataset/{{dataset.datasetKey}}" target="_blank">{{dataset.datasetKey}}</a>
+                            </td>
+                            <td>{{dataset.recordCount | localNumber}}</td>
+                            <td>{{dataset.lastCrawlCount | localNumber}}</td>
+                            <td><span class="{{$ctrl.getSeverityClass(dataset)}}">{{dataset.percentagePreviousCrawls | formatAsPercentage}}%</span>
+                            </td>
+                            <td>{{dataset.lastCrawlId}}</td>
+                            <td>
+                                <div class="gb-chart" ng-if="dataset.crawlInfo.length < 100">
+                                    <div ng-repeat="crawl in dataset.crawlInfo"
+                                         style="width:20px;height:{{$ctrl.getHeight(dataset.crawlInfo, crawl)}}%;max-width: {{$ctrl.getMaxWidth(dataset.crawlInfo)}}%"
+                                         title="crawl {{crawl.crawlId}}: {{crawl.count | localNumber}}"></div>
+                                </div>
+                                <div ng-if="dataset.crawlInfo.length >= 100" class="text-right">
+                                    Date from {{dataset.crawlInfo.length}} ingestions
+                                </div>
+                            </td>
+                            <td class="text-right whiteSpace-nowrap">
+                                 <span ui-sref="crawlHistory({uuid: dataset.datasetKey})" class="btnLink">
+                                    <i class="material-icons">timeline</i>
+                                     <md-tooltip md-direction="top">Ingestion history</md-tooltip>
+                                </span>
+                                <span ng-click="$ctrl.expandedRowMap[$index] = !$ctrl.expandedRowMap[$index]"
+                                      class="btnLink">
+                                    <i class="material-icons">more_vert</i>
+                                    <md-tooltip md-direction="top">Details</md-tooltip>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end ng-if="$ctrl.expandedRowMap[$index]">
+                            <td colspan="9">
+                                <code>
+                                <pre>{{dataset | json : spacing}}
+                                </pre>
+                                </code>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="emptyInfo" ng-if="$ctrl.rowCollection.count === 0">
+                    <h3>No ingestion entries for this data</h3>
+                    <p>This can be the case if the dataset hasn't been ingested since logging was introduced on 6 November 2013</p>
+                </div>
+            </md-content>
+        </div>
+
+        <div ng-show="$ctrl.currentNavItem == 'about'">
+            <md-content class="md-padding white">
+                <div ng-bind-html="$ctrl.aboutContent" class="aboutBody"></div>
+            </md-content>
+        </div>
+
+    </md-card>
+
+</div>

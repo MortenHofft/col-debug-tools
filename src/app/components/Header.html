@@ -1,0 +1,14 @@
+<md-toolbar class="site-top-bar gb-nav" md-whiteframe="3">
+  <div class="md-toolbar-tools">
+    <md-button class="md-icon-button" aria-label="menu" ng-click="$ctrl.toggleMenu()" ng-if="!$ctrl.mdMedia('gt-md')">
+      <i class="material-icons">menu</i>
+    </md-button>
+    <md-button aria-label="menu" ng-click="$ctrl.changeState('app')">
+      COL debugging tool
+    </md-button>
+    <div flex></div>
+    <md-button class="md-icon-button" aria-label="More">
+      <a href="https://github.com/gbif/col-debug-tools/issues" target="_blank"><i class="material-icons">feedback</i></a>
+    </md-button>
+  </div>
+</md-toolbar>
