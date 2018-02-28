@@ -1,0 +1,3 @@
+# About ingestion history
+
+Datasets are (re)ingested regularly to check for updates.  This process can fail for various reasons and typically this happens if the dataset is offline or responding incorrectly.  It can also happen when the GBIF systems are deliberately interrupted to e.g. deploy a new version.  The ingestion history gives an overview of the ingestion process, which failed, how many occurrences failed during processing and how many were updated etc. This can be useful when diagnosing issues.  Additionally this can give insight into the growth or changes observed in the dataset over time.

@@ -8,7 +8,7 @@ var taxstatus = ['ACCEPTED', 'DOUBTFUL'];
 var type = ['SCIENTIFIC', 'VIRUS', 'HYBRID-FORMULA', 'CULTIVAR', 'OTU', 'PLACEHOLDER', 'NONE'];
 
 module.exports = {
-  template: require('./SpeciesSearch.html'),
+  template: require('./speciesSearch.html'),
   controller: SpeciesSearch
 };
 
