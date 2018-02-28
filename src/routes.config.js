@@ -19,7 +19,7 @@ function routesConfig($stateProvider, $urlRouterProvider, $locationProvider) {
           component: 'speciesTree'
         })
         .state('speciesKey', {
-          url: '/species/:key?',
+          url: '/taxon/:key?',
           component: 'speciesKey'
         })
         .state('datasetSearch', {

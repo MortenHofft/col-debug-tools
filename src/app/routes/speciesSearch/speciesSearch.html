@@ -70,20 +70,28 @@
                 <div class="table-container">
                     <table class="gb-table-linked table-striped">
                         <thead>
-                            <th>ScientificName</th>
                             <th>Key</th>
+                            <th>ScientificName</th>
+                            <th>authorship</th>
                             <th>Dataset</th>
+                            <th>Taxa</th>
                             <th></th>
                         </thead>
                         <tbody>
                         <tr ng-repeat-start="item in $ctrl.searchResults.result">
+                            <td>
+                              <a ng-href="{{$ctrl.api}}/name/{{item.key}}">{{item.key}}</a>
+                            </td>
                             <td>{{item.scientificName}}</td>
+                            <td>{{item.authorship}}</td>
                             <td>
-                                <a href="/species/{{item.key}}">{{item.key}}</a>
+                                <a href="/dataset/{{item.datasetKey}}">{{item._datasetTitle}}</a>
                             </td>
-                            <td>
-                                <a href="/dataset/{{item.datasetKey}}">{{item.datasetKey}} : {{item._datasetTitle}}</a>
-                            </td>
+                          <td>
+                            <div ng-repeat="taxa in item.taxa">
+                              <a href="/taxon/{{taxa.key}}" class="taxonLink status-{{taxa.status}}">{{taxa.key}}</a>
+                            </div>
+                          </td>
                             <td class="text-right whiteSpace-nowrap">
                                 <span   ng-click="$ctrl.expandedIndex = $ctrl.expandedIndex == $index ? undefined : $index"
                                         class="btnLink">

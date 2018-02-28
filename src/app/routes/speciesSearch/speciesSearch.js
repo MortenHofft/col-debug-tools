@@ -15,6 +15,7 @@ module.exports = {
 /** @ngInject */
 function SpeciesSearch($log, $stateParams, $state, SpeciesSearch, DatasetKey) {
   var vm = this;
+  vm.api = '//api.col.plus';
   vm.state = $stateParams;
   vm.rank = rank;
   vm.nomstatus = nomstatus;

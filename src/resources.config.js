@@ -27,6 +27,16 @@ angular
         }
       });
     })
+  .factory('SpeciesKeyDetails', function ($resource) {
+    return $resource(API + 'taxon/:key/:detail', null, {
+      query: {
+        method: 'GET',
+        isArray: false,
+        cancellable: true,
+        cache: true
+      }
+    });
+  })
     .factory('DatasetKey', function ($resource) {
       return $resource(API + 'dataset/:key', null, {
         query: {
@@ -34,7 +44,6 @@ angular
           isArray: false,
           cancellable: true,
           cache: true
-        },
-        cache: true
+        }
       });
     });
