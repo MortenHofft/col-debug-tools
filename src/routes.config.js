@@ -11,7 +11,7 @@ function routesConfig($stateProvider, $urlRouterProvider, $locationProvider) {
           component: 'app'
         })
         .state('speciesSearch', {
-          url: '/species/search?q&datasetKey&rank',
+          url: '/name/search?q&datasetKey&rank&nomstatus&taxstatus&type&issue&offset&limit',
           component: 'speciesSearch'
         })
         .state('speciesTree', {

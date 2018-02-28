@@ -15,7 +15,8 @@ import './index.styl';
 
 // routes
 var App = require('./app/routes/App');
-var SpeciesSearch = require('./app/routes/speciesSearch/SpeciesSearch');
+var speciesSearch = require('./app/routes/speciesSearch/speciesSearch');
+var speciesKey = require('./app/routes/speciesKey/speciesKey');
 // var IptSyncState = require('./app/routes/iptSyncState/iptSyncState');
 // var Overcrawls = require('./app/routes/overcrawls/Overcrawls');
 // var CurrentCrawls = require('./app/routes/currentCrawls/CurrentCrawls');
@@ -35,7 +36,8 @@ angular
   .config(materialConfig)
   .constant('env', env)
   .component('app', App)
-  .component('speciesSearch', SpeciesSearch)
+  .component('speciesSearch', speciesSearch)
+  .component('speciesKey', speciesKey)
   // .component('speciesTree', SpeciesTree)
   // .component('speciesKey', SpeciesKey)
   // .component('datasetSearch', DatasetSearch)

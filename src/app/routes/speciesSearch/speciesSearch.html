@@ -1,0 +1,151 @@
+<div class="card-area">
+    <md-card>
+        <md-nav-bar
+                md-no-ink-bar="disableInkBar"
+                md-selected-nav-item="$ctrl.currentNavItem"
+                nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-href="#" name="tool">
+                Name search
+            </md-nav-item>
+        </md-nav-bar>
+
+        <div>
+            <md-content layout-wrap layout-gt-sm="row" layout-padding class="white">
+                <md-input-container flex-gt-sm="50">
+                    <label>Search table</label>
+                    <input ng-model="$ctrl.state.q">
+                </md-input-container>
+                <md-input-container flex="initial" style="width:200px">
+                    <label>Dataset key</label>
+                    <input ng-model="$ctrl.state.datasetKey">
+                </md-input-container>
+
+                <md-input-container ng-repeat="optionType in $ctrl.optionFilters">
+                    <label>{{optionType}}</label>
+                    <md-select ng-model="$ctrl.state[optionType]">
+                        <md-option ng-value="">
+                            _none
+                        </md-option>
+                        <md-option ng-repeat="item in $ctrl[optionType]" ng-value="item">
+                            {{item}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+                <!--<md-input-container>-->
+                    <!--<label>nomstatus</label>-->
+                    <!--<md-select ng-model="$ctrl.state.nomstatus">-->
+                        <!--<md-option ng-value="">-->
+                            <!--_none-->
+                        <!--</md-option>-->
+                        <!--<md-option ng-repeat="nomstatus in $ctrl.nomstatus" ng-value="nomstatus">-->
+                            <!--{{nomstatus}}-->
+                        <!--</md-option>-->
+                    <!--</md-select>-->
+                <!--</md-input-container>-->
+                <!---->
+                <!--<md-input-container>-->
+                    <!--<label>taxstatus</label>-->
+                    <!--<md-select ng-model="$ctrl.state.taxstatus">-->
+                        <!--<md-option ng-value="">-->
+                            <!--_none-->
+                        <!--</md-option>-->
+                        <!--<md-option ng-repeat="item in $ctrl.taxstatus" ng-value="item">-->
+                            <!--{{item}}-->
+                        <!--</md-option>-->
+                    <!--</md-select>-->
+                <!--</md-input-container>-->
+
+                <div>
+                    <md-button class="md-raised md-primary" ng-click="$ctrl.search()">Search</md-button>
+                </div>
+            </md-content>
+            <md-divider></md-divider>
+            <div ng-if="$ctrl.searchResults.$resolved">
+                <h4>Total results: {{$ctrl.searchResults.total | localNumber}}</h4>
+            </div>
+        </div>
+        <div>
+            <div>
+                <div class="table-container">
+                    <table class="gb-table-linked table-striped">
+                        <thead>
+                            <th>ScientificName</th>
+                            <th>Key</th>
+                            <th>Dataset</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat-start="item in $ctrl.searchResults.result">
+                            <td>{{item.scientificName}}</td>
+                            <td>
+                                <a href="/species/{{item.key}}">{{item.key}}</a>
+                            </td>
+                            <td>
+                                <a href="/dataset/{{item.datasetKey}}">{{item.datasetKey}} : {{item._datasetTitle}}</a>
+                            </td>
+                            <td class="text-right whiteSpace-nowrap">
+                                <span   ng-click="$ctrl.expandedIndex = $ctrl.expandedIndex == $index ? undefined : $index"
+                                        class="btnLink">
+                                    <i class="material-icons">more_vert</i>
+                                    <md-tooltip md-direction="top">Details</md-tooltip>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end ng-if="$ctrl.expandedIndex == $index">
+                            <td colspan="4">
+                                <code>
+                                    <pre>{{item | json : spacing}}
+                                    </pre>
+                                </code>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="emptyInfo" ng-if="$ctrl.searchResults.total === 0">
+                <h3>No results found</h3>
+            </div>
+
+            <div class="emptyInfo" ng-if="!$ctrl.searchResults.$resolved">
+                <h3>Searching</h3>
+            </div>
+
+            <div>
+                <md-content layout-wrap layout-gt-sm="row" layout-padding class="white">
+                    <md-input-container flex-gt-sm="20">
+                        <label>Limit</label>
+                        <input ng-model="$ctrl.limit">
+                    </md-input-container>
+                    <md-input-container flex="initial" style="width:200px">
+                        <label>Offset</label>
+                        <input ng-model="$ctrl.offset">
+                    </md-input-container>
+                    <md-button class="md-raised md-primary" ng-click="$ctrl.offset = $ctrl.offset - $ctrl.limit; $ctrl.search(true)">Offset -{{$ctrl.limit}}</md-button>
+                    <md-button class="md-raised md-primary" ng-click="$ctrl.offset = $ctrl.offset + $ctrl.limit; $ctrl.search(true)">Offset +{{$ctrl.limit}}</md-button>
+                </md-content>
+            </div>
+        </div>
+
+        <!--<div>-->
+            <!--<ul>-->
+                <!--<li ng-repeat="item in $ctrl.searchResults.result">-->
+                    <!--<h4>{{item.scientificName}}</h4>-->
+                    <!--<div>-->
+                        <!--<pre>{{item | json : spacing}}</pre>-->
+                    <!--</div>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+
+        <div ng-show="$ctrl.currentNavItem == 'about'">
+            <md-content class="md-padding white">
+                <div ng-bind-html="$ctrl.aboutContent" class="aboutBody"></div>
+            </md-content>
+        </div>
+
+    </md-card>
+
+</div>
