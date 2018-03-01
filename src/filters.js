@@ -1,4 +1,5 @@
 var angular = require('angular');
+var jsonMarkup = require('json-markup');
 
 /** @ngInject */
 angular
@@ -14,6 +15,17 @@ angular
   .filter('simplifyHttpUrls', function () {
     return function (url) {
       return url.replace(/^http(s)?:\/\/(www\.)?/, '');
+    };
+  })
+  .filter('jsonMarkup', function () {
+    return function (o) {
+      var stripped = angular.fromJson(angular.toJson(o));
+      return jsonMarkup(stripped);
+    };
+  })
+  .filter('asApi', function () {
+    return function () {
+      return '//api.col.plus' + location.pathname + location.search;
     };
   })
   .filter('formatAsPercentage', function () {

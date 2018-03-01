@@ -9,13 +9,12 @@ module.exports = {
 };
 
 /** @ngInject */
-function nameKey($log, $stateParams, $state, NameKey, NameKeyDetails, NameKeyDetailList) {
+function nameKey($log, $stateParams, $state, NameKey, NameKeyDetails, NameKeyDetailList, NameSearch, DatasetKey) {
   var vm = this;
-  vm.name = NameKey.get({key: $stateParams.key});
-  vm.synonyms = NameKeyDetailList.get({key: $stateParams.key, detail: 'synonyms'});
+  vm.name = NameKey.get({key: $stateParams.itemKey});
+  vm.synonyms = NameKeyDetailList.get({key: $stateParams.itemKey, detail: 'synonyms'});
 
   vm.name.$promise.then(function () {
-    console.log('name key promise');
     var o = angular.fromJson(angular.toJson(vm.name));
     decorateInfoJson(o);
     vm.nameJson = jsonMarkup(o);
@@ -25,10 +24,37 @@ function nameKey($log, $stateParams, $state, NameKey, NameKeyDetails, NameKeyDet
     decorate(o, 'datasetKey', '/dataset/KEY');
   }
 
+  vm.getCurrentPath = function () {
+    return location.pathname + location.search;
+  };
+
   function decorate(o, path, template) {
     var v = _.get(o, path);
     if (v) {
       _.set(o, path, location.protocol + '//' + location.host + template.replace('KEY', v));
     }
   }
+
+  vm.synonymsConfig = {
+    columns: [
+      {
+        path: 'scientificName',
+        title: 'Scientific Name'
+      },
+      {
+        path: 'authorship',
+        title: 'authorship'
+      },
+      {
+        path: 'datasetKey',
+        title: 'DatasetKey',
+        linkTemplate: '/dataset/{key}',
+        templateKey: 'datasetKey'
+      },
+      {
+        path: 'code',
+        title: 'code'
+      }
+    ]
+  };
 }

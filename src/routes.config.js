@@ -15,7 +15,7 @@ function routesConfig($stateProvider, $urlRouterProvider, $locationProvider) {
       component: 'nameSearch'
     })
     .state('nameKey', {
-      url: '/name/:key?',
+      url: '/name/:itemKey?offset&limit',
       component: 'nameKey'
     })
     .state('speciesTree', {
@@ -23,15 +23,20 @@ function routesConfig($stateProvider, $urlRouterProvider, $locationProvider) {
       component: 'speciesTree'
     })
     .state('taxonKey', {
-      url: '/taxon/:key?',
+      url: '/taxon/:itemKey?',
       component: 'taxonKey'
     })
-    .state('datasetSearch', {
-      url: '/dataset/search',
-      component: 'datasetSearch'
+  .state('taxonChildren', {
+    parent: 'taxonKey',
+    url: '/children?offset&limit',
+    component: 'taxonChildren'
+  })
+    .state('dataset', {
+      url: '/dataset?q&offset&limit',
+      component: 'dataset'
     })
     .state('datasetKey', {
-      url: '/dataset/:key',
+      url: '/dataset/:itemKey',
       component: 'datasetKey'
     });
 }

@@ -1,0 +1,49 @@
+<div>
+    <div>
+        <div class="table-container">
+            <table class="gb-table-linked table-striped">
+                <thead>
+                    <th ng-repeat="col in $ctrl.options.columns">{{ col.title || col.path }}</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                <tr ng-repeat-start="item in $ctrl.results">
+                    <td ng-repeat="col in $ctrl.options.columns">
+                        <div ng-if="col.type !== 'ARRAY'">
+                            <span ng-if="!col.linkTemplate">
+                                {{ $ctrl.getPath(item, col) }}
+                            </span>
+                            <a ng-href="{{ $ctrl.getUrl(item, col) }}" ng-if="col.linkTemplate">
+                                {{ $ctrl.getPath(item, col) }}
+                            </a>
+                        </div>
+                        <div ng-if="col.type === 'ARRAY'">
+                            <div ng-repeat="subItem in $ctrl.getPath(item, col)">
+                                <span ng-if="!col.linkTemplate">
+                                    {{ $ctrl.resolvePath(subItem, 'display') }}
+                                </span>
+                                <a ng-href="{{ $ctrl.getUrl(subItem, col) }}" ng-if="col.linkTemplate">
+                                    {{ $ctrl.resolvePath(subItem, col.displayPath ) }}
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-right whiteSpace-nowrap">
+                        <span ng-click="$ctrl.expandedIndex = $ctrl.expandedIndex == $index ? undefined : $index" class="btnLink">
+                            <i class="material-icons">more_vert</i>
+                            <md-tooltip md-direction="top">Details</md-tooltip>
+                        </span>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-if="$ctrl.expandedIndex == $index">
+                    <td colspan="{{$ctrl.options.columns.length + 1}}">
+                        <div ng-bind-html="item | jsonMarkup">
+
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,3 @@
-var about = require('./about.md');
 var _ = require('lodash');
 var async = require('async');
 
@@ -28,7 +27,6 @@ function nameSearch($log, $stateParams, $state, NameSearch, DatasetKey) {
 
   var q = _.assign({}, $stateParams, {limit: vm.limit, offset: vm.offset});
   vm.searchResults = NameSearch.query(q);
-  vm.searchResults.$promise.then(decorate);
 
   vm.search = function (keepOffset) {
     if (!keepOffset) {
@@ -38,24 +36,50 @@ function nameSearch($log, $stateParams, $state, NameSearch, DatasetKey) {
     $state.go('nameSearch', q);
   };
 
-  function decorate(response) {
-    async.eachLimit(response.result, 10, decorateWithDatasetTitle, function () {
-          // ignore errors
-    });
-  }
-
-  function decorateWithDatasetTitle(nameUsage, cb) {
+  function customDecoration(item, callback) {
     // get dataset title if not already there
-    DatasetKey.get({key: nameUsage.datasetKey}).$promise
+    DatasetKey.get({key: item.datasetKey}).$promise
       .then(function (response) {
-        nameUsage._datasetTitle = response.title;
-        cb();
+        item._datasetTitle = response.title;
+        callback();
       })
       .catch(function () {
           // ignore errors
-        cb();
+        callback();
       });
   }
+
+  vm.tableConfig = {
+    resource: NameSearch,
+    columns: [
+      {
+        path: 'scientificName',
+        title: 'Scientific Name'
+      },
+      {
+        path: 'key',
+        title: 'Name key',
+        linkTemplate: '/name/{key}',
+        templateKey: 'key'
+      },
+      {
+        path: '_datasetTitle',
+        title: 'Dataset',
+        linkTemplate: '/dataset/{key}',
+        templateKey: 'datasetKey'
+      },
+      {
+        path: 'taxa',
+        title: 'Taxa',
+        type: 'ARRAY',
+        displayPath: 'key',
+        linkTemplate: '/taxon/{key}',
+        templateKey: 'key'
+      }
+    ],
+    decorator: customDecoration,
+    paging: true
+  };
 }
 
 /*

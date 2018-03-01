@@ -1,0 +1,35 @@
+<div class="card-area">
+    <md-card>
+        <md-nav-bar
+                md-no-ink-bar="disableInkBar"
+                md-selected-nav-item="$ctrl.currentNavItem"
+                nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-href="#" name="tool">
+                Dataset search
+            </md-nav-item>
+            <md-nav-item  md-nav-href="{{ '' | asApi}}" name="about">
+                API
+            </md-nav-item>
+        </md-nav-bar>
+
+        <div>
+            <md-content layout-wrap layout-gt-sm="row" layout-padding class="white">
+                <md-input-container flex-gt-sm="50">
+                    <label>Search table</label>
+                    <input ng-model="$ctrl.state.q">
+                </md-input-container>
+                <div>
+                    <md-button class="md-raised md-primary" ng-click="$ctrl.search()">Search</md-button>
+                </div>
+            </md-content>
+            <md-divider></md-divider>
+            <div ng-if="$ctrl.searchResults.$resolved">
+                <h4>Total results: {{$ctrl.searchResults.total | localNumber}}</h4>
+            </div>
+        </div>
+
+        <table-search-component options="$ctrl.tableConfig"></table-search-component>
+
+    </md-card>
+
+</div>

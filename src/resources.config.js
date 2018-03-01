@@ -44,6 +44,10 @@ angular
         isArray: true,
         cancellable: true,
         cache: true
+      },
+      get: {
+        method: 'GET',
+        isArray: true
       }
     });
   })
@@ -67,16 +71,30 @@ angular
       }
     });
   })
-  .factory('TaxonKeyList', function ($resource) {
-    return $resource(API + 'taxon/:key/:list', null, {
+  .factory('TaxonKeyDetailList', function ($resource) {
+    return $resource(API + 'taxon/:key/:detail', null, {
       query: {
         method: 'GET',
         isArray: true,
         cancellable: true,
         cache: true
+      },
+      get: {
+        method: 'GET',
+        isArray: true
       }
     });
   })
+    .factory('Dataset', function ($resource) {
+      return $resource(API + 'dataset', null, {
+        query: {
+          method: 'GET',
+          isArray: false,
+          cancellable: true,
+          cache: true
+        }
+      });
+    })
   .factory('DatasetKey', function ($resource) {
     return $resource(API + 'dataset/:key', null, {
       query: {

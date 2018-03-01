@@ -18,6 +18,9 @@ var App = require('./app/routes/App');
 var nameSearch = require('./app/routes/nameSearch/nameSearch');
 var nameKey = require('./app/routes/nameKey/nameKey');
 var taxonKey = require('./app/routes/taxonKey/taxonKey');
+var taxonChildren = require('./app/routes/taxonChildren/taxonChildren');
+var dataset = require('./app/routes/dataset/dataset');
+var datasetKey = require('./app/routes/datasetKey/datasetKey');
 // var IptSyncState = require('./app/routes/iptSyncState/iptSyncState');
 // var Overcrawls = require('./app/routes/overcrawls/Overcrawls');
 // var CurrentCrawls = require('./app/routes/currentCrawls/CurrentCrawls');
@@ -25,6 +28,8 @@ var taxonKey = require('./app/routes/taxonKey/taxonKey');
 // components
 var Header = require('./app/components/Header');
 var Nav = require('./app/components/Nav');
+var Table = require('./app/components/Table');
+var TableSearch = require('./app/components/TableSearch');
 
 // configurations
 var routesConfig = require('./routes.config');
@@ -40,11 +45,16 @@ angular
   .component('nameSearch', nameSearch)
   .component('nameKey', nameKey)
   .component('taxonKey', taxonKey)
+  .component('taxonChildren', taxonChildren)
+  .component('dataset', dataset)
+  .component('datasetKey', datasetKey)
   // .component('speciesTree', SpeciesTree)
   // .component('speciesKey', SpeciesKey)
   // .component('datasetSearch', DatasetSearch)
   // .component('datasetKey', DatasetKey)
   .component('headerComponent', Header)
+  .component('tableComponent', Table)
+  .component('tableSearchComponent', TableSearch)
   .component('navComponent', Nav);
 
 // base config

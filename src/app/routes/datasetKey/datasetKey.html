@@ -1,0 +1,25 @@
+<div class="card-area">
+    <!--<h2 class="md-headline">Crawl history</h2>-->
+    <md-card>
+        <md-nav-bar
+                md-no-ink-bar="disableInkBar"
+                md-selected-nav-item="$ctrl.currentNavItem"
+                nav-bar-aria-label="navigation links">
+            <md-nav-item  md-nav-click="goto('page1')"  name="tool">
+                Dataset
+            </md-nav-item>
+            <md-nav-item  md-nav-href="{{ '' | asApi}}" name="about">
+                API
+            </md-nav-item>
+        </md-nav-bar>
+
+        <div>
+            <md-content class="md-padding white">
+                <h2>Info</h2>
+                <div ng-bind-html="$ctrl.datasetJson" style="line-height:17px;font-size:13px;font-family:monospace;white-space:pre;"></div>
+            </md-content>
+        </div>
+
+    </md-card>
+
+</div>

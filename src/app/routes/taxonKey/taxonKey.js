@@ -9,17 +9,17 @@ module.exports = {
 };
 
 /** @ngInject */
-function taxonKey($log, $stateParams, $state, TaxonKey, TaxonKeyDetails) {
+function taxonKey($log, $stateParams, $state, TaxonKey, TaxonKeyDetails, TaxonKeyDetailList) {
   var vm = this;
-  vm.taxon = TaxonKey.get({key: $stateParams.key});
-  vm.info = TaxonKeyDetails.get({key: $stateParams.key, detail: 'info'});
-  vm.children = TaxonKeyDetails.get({key: $stateParams.key, detail: 'children'});
-  // vm.classification = SpeciesKeyDetails.get({key: $stateParams.key, detail: 'classification'}, {isArray: true});
-  vm.synonyms = TaxonKeyDetails.get({key: $stateParams.key, detail: 'synonyms'});
-  vm.verbatim = TaxonKeyDetails.get({key: $stateParams.key, detail: 'verbatim'});
+  vm.key = $stateParams.itemKey;
+  vm.childrenLimit = 100;
+  vm.taxon = TaxonKey.get({key: $stateParams.itemKey});
+  vm.info = TaxonKeyDetails.get({key: $stateParams.itemKey, detail: 'info'});
+  vm.children = TaxonKeyDetails.get({key: $stateParams.itemKey, detail: 'children', limit: vm.childrenLimit});
+  vm.classification = TaxonKeyDetailList.get({key: $stateParams.itemKey, detail: 'classification'});
+  vm.synonyms = TaxonKeyDetailList.get({key: $stateParams.itemKey, detail: 'synonyms'});
 
   vm.info.$promise.then(function () {
-    console.log(5);
     var o = angular.fromJson(angular.toJson(vm.info));
     decorateInfoJson(o);
     vm.infoJson = jsonMarkup(o);
@@ -38,4 +38,40 @@ function taxonKey($log, $stateParams, $state, TaxonKey, TaxonKeyDetails) {
       _.set(o, path, location.protocol + '//' + location.host + template.replace('KEY', v));
     }
   }
+
+  vm.synonymsConfig = {
+    columns: [
+      {
+        path: 'scientificName',
+        title: 'Scientific Name'
+      },
+      {
+        path: 'authorship',
+        title: 'authorship'
+      },
+      {
+        path: 'datasetKey',
+        title: 'DatasetKey',
+        linkTemplate: '/dataset/{key}',
+        templateKey: 'datasetKey'
+      },
+      {
+        path: 'code',
+        title: 'code'
+      }
+    ]
+  };
+
+  vm.classificationConfig = {
+    columns: [
+      {
+        path: 'name.scientificName',
+        title: 'Scientific Name'
+      },
+      {
+        path: 'name.rank',
+        title: 'Rank'
+      }
+    ]
+  };
 }
