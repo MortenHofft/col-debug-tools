@@ -8,12 +8,12 @@ var taxstatus = ['ACCEPTED', 'DOUBTFUL'];
 var type = ['SCIENTIFIC', 'VIRUS', 'HYBRID-FORMULA', 'CULTIVAR', 'OTU', 'PLACEHOLDER', 'NONE'];
 
 module.exports = {
-  template: require('./speciesSearch.html'),
-  controller: SpeciesSearch
+  template: require('./nameSearch.html'),
+  controller: nameSearch
 };
 
 /** @ngInject */
-function SpeciesSearch($log, $stateParams, $state, SpeciesSearch, DatasetKey) {
+function nameSearch($log, $stateParams, $state, NameSearch, DatasetKey) {
   var vm = this;
   vm.api = '//api.col.plus';
   vm.state = $stateParams;
@@ -27,7 +27,7 @@ function SpeciesSearch($log, $stateParams, $state, SpeciesSearch, DatasetKey) {
   vm.offset = _.toSafeInteger($stateParams.offset) || 0;
 
   var q = _.assign({}, $stateParams, {limit: vm.limit, offset: vm.offset});
-  vm.searchResults = SpeciesSearch.query(q);
+  vm.searchResults = NameSearch.query(q);
   vm.searchResults.$promise.then(decorate);
 
   vm.search = function (keepOffset) {
@@ -35,7 +35,7 @@ function SpeciesSearch($log, $stateParams, $state, SpeciesSearch, DatasetKey) {
       vm.offset = undefined;
     }
     var q = _.assign({}, $stateParams, {limit: vm.limit, offset: vm.offset});
-    $state.go('speciesSearch', q);
+    $state.go('nameSearch', q);
   };
 
   function decorate(response) {

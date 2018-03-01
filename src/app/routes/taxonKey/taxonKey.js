@@ -4,19 +4,19 @@ var async = require('async');
 var jsonMarkup = require('json-markup');
 
 module.exports = {
-  template: require('./speciesKey.html'),
-  controller: speciesKey
+  template: require('./taxonKey.html'),
+  controller: taxonKey
 };
 
 /** @ngInject */
-function speciesKey($log, $stateParams, $state, SpeciesKey, SpeciesKeyDetails) {
+function taxonKey($log, $stateParams, $state, TaxonKey, TaxonKeyDetails) {
   var vm = this;
-  vm.taxon = SpeciesKey.get({key: $stateParams.key});
-  vm.info = SpeciesKeyDetails.get({key: $stateParams.key, detail: 'info'});
-  vm.children = SpeciesKeyDetails.get({key: $stateParams.key, detail: 'children'});
+  vm.taxon = TaxonKey.get({key: $stateParams.key});
+  vm.info = TaxonKeyDetails.get({key: $stateParams.key, detail: 'info'});
+  vm.children = TaxonKeyDetails.get({key: $stateParams.key, detail: 'children'});
   // vm.classification = SpeciesKeyDetails.get({key: $stateParams.key, detail: 'classification'}, {isArray: true});
-  vm.synonyms = SpeciesKeyDetails.get({key: $stateParams.key, detail: 'synonyms'});
-  vm.verbatim = SpeciesKeyDetails.get({key: $stateParams.key, detail: 'verbatim'});
+  vm.synonyms = TaxonKeyDetails.get({key: $stateParams.key, detail: 'synonyms'});
+  vm.verbatim = TaxonKeyDetails.get({key: $stateParams.key, detail: 'verbatim'});
 
   vm.info.$promise.then(function () {
     console.log(5);
