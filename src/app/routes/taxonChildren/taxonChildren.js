@@ -34,11 +34,13 @@ function taxonChildren($log, $stateParams, $state, TaxonKeyDetails, DatasetKey) 
     columns: [
       {
         path: 'name.scientificName',
-        title: 'Scientific Name'
+        title: 'Scientific Name',
+        linkTemplate: '/taxon/{key}',
+        templateKey: 'key'
       },
       {
         path: 'name.rank',
-        title: 'RAnk'
+        title: 'Rank'
       },
       {
         path: '_datasetTitle',

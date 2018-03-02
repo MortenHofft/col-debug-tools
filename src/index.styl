@@ -1,7 +1,7 @@
 $orangePeel := #ff6d00;
 @import "./table.styl"
-@import "app/routes/overcrawls/overcrawls.styl"
-@import "app/routes/currentCrawls/CurrentCrawls.styl"
+@import "app/components/MessageCenter.styl"
+
 body {
   font-size: 14px;
   background: #f2f2f2;
@@ -155,6 +155,13 @@ h1, h2, h3, h4 {
 
 
 /* json markup styles */
+.jsonDump {
+  padding: 20px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-width: 1px 0;
+  overflow: auto;
+}
 .json-markup {
   line-height:17px;
   font-size:13px;
@@ -171,4 +178,84 @@ h1, h2, h3, h4 {
 .json-markup-string {
   color: green;
   white-space: normal;
+}
+
+
+.navFavorites {
+  h2 {
+    font-size: 10px;
+    color: #aaa;
+    text-align: right;
+    margin: 0;
+    padding: 5px 10px;
+  }
+  ul {
+    padding: 0 10px 0 15px;
+    margin: 0;
+  }
+  li {
+    color: #aaa;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+}
+
+.pull-right {
+  float:right;
+}
+.clearfix::after {
+  display: block;
+  content: "";
+  clear: both;
+}
+
+dl.asTable {
+  display: table;
+  >div {
+    display: table-row;
+  }
+  dt,dd {
+    display: table-cell;
+    padding: 5px 10px 5px 0;
+  }
+  dt {
+    padding-right: 30px;
+    white-space: nowrap;
+  }
+}
+
+.inlineList, .inlineClassification {
+  a:after, span:after {
+    font-style: normal;
+    content: ' \25CF ';
+    font-size: 80%;
+    color: #ccc;
+    display: inline-block;
+    padding: 0 3px;
+  }
+  span:last-of-type:after, a:last-of-type:after {
+    display: none;
+  }
+  a {
+    color: inherit;
+  }
+  &.discreet {
+    span, a {
+      color: #666;
+      &:hover {
+        color: #666;
+      }
+    }
+  }
+  .genus, .species {
+    font-style: italic;
+  }
+}
+
+.inlineClassification {
+  a:after, span:after {
+    content: ' \276f ';
+  }
 }

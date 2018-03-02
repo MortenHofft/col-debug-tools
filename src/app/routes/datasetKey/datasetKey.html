@@ -11,14 +11,36 @@
             <md-nav-item  md-nav-href="{{ '' | asApi}}" name="about">
                 API
             </md-nav-item>
+            <div flex></div>
+            <md-button class="md-icon-button" aria-label="Favorite" ng-click="$ctrl.toggleFavorite()">
+                <md-icon class="material-icons">favorite</md-icon>
+            </md-button>
         </md-nav-bar>
 
         <div>
             <md-content class="md-padding white">
-                <h2>Info</h2>
-                <div ng-bind-html="$ctrl.datasetJson" style="line-height:17px;font-size:13px;font-family:monospace;white-space:pre;"></div>
+                <section>
+                    <h2>Highlights</h2>
+                    <dl class="asTable">
+                        <div>
+                            <dt>Title</dt>
+                            <dd>{{ $ctrl.dataset.title }}</dd>
+                        </div>
+                    </dl>
+                </section>
             </md-content>
         </div>
+
+        <section class="jsonDump clearfix">
+            <div class="pull-right" style="margin:-20px 0">
+                <md-switch ng-model="$ctrl.localStorage.hideDatasetJson" aria-label="Hide JSON">
+                    Hide JSON
+                </md-switch>
+            </div>
+            <div ng-if=!$ctrl.localStorage.hideDatasetJson>
+                <div ng-bind-html="$ctrl.datasetJson"></div>
+            </div>
+        </section>
 
     </md-card>
 

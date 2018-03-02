@@ -30,6 +30,7 @@ var Header = require('./app/components/Header');
 var Nav = require('./app/components/Nav');
 var Table = require('./app/components/Table');
 var TableSearch = require('./app/components/TableSearch');
+var MessageCenter = require('./app/components/MessageCenter');
 
 // configurations
 var routesConfig = require('./routes.config');
@@ -55,8 +56,13 @@ angular
   .component('headerComponent', Header)
   .component('tableComponent', Table)
   .component('tableSearchComponent', TableSearch)
+  .component('messageCenterComponent', MessageCenter)
   .component('navComponent', Nav);
 
 // base config
 require('./filters');
 require('./resources.config');
+
+// services
+require('./favorites.service');
+require('./message.service');

@@ -6,8 +6,9 @@ module.exports = {
 };
 
 /** @ngInject */
-function Nav($state, $log, $mdSidenav) {
+function Nav($state, $log, $mdSidenav, Favorites) {
   this.$state = $state;
+  this.favorites = Favorites;
   this.$log = $log;
   this.$mdSidenav = $mdSidenav;
   this.menuOptions = [

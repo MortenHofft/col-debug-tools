@@ -9,15 +9,22 @@ module.exports = {
 };
 
 /** @ngInject */
-function taxonKey($log, $stateParams, $state, TaxonKey, TaxonKeyDetails, TaxonKeyDetailList) {
+function taxonKey($http, $log, $stateParams, $state, TaxonKey, TaxonKeyDetails, TaxonKeyDetailList, Favorites, $localStorage) {
   var vm = this;
+  vm.favorites = Favorites;
+  vm.localStorage = $localStorage;
   vm.key = $stateParams.itemKey;
   vm.childrenLimit = 100;
   vm.taxon = TaxonKey.get({key: $stateParams.itemKey});
   vm.info = TaxonKeyDetails.get({key: $stateParams.itemKey, detail: 'info'});
-  vm.children = TaxonKeyDetails.get({key: $stateParams.itemKey, detail: 'children', limit: vm.childrenLimit});
-  vm.classification = TaxonKeyDetailList.get({key: $stateParams.itemKey, detail: 'classification'});
-  vm.synonyms = TaxonKeyDetailList.get({key: $stateParams.itemKey, detail: 'synonyms'});
+  vm.children = TaxonKeyDetails.query({key: $stateParams.itemKey, detail: 'children', limit: vm.childrenLimit});
+  vm.classification = TaxonKeyDetailList.query({key: $stateParams.itemKey, detail: 'classification'});
+  vm.synonyms2 = TaxonKeyDetailList.query({key: $stateParams.itemKey, detail: 'classification'});
+
+  $http.get('//api.col.plus/taxon/' + $stateParams.itemKey + '/synonyms', {query: {key: $stateParams.itemKey, detail: 'synonyms'}})
+    .then(function (response) {
+      vm.synonyms = response.data;
+    });
 
   vm.info.$promise.then(function () {
     var o = angular.fromJson(angular.toJson(vm.info));
@@ -38,6 +45,12 @@ function taxonKey($log, $stateParams, $state, TaxonKey, TaxonKeyDetails, TaxonKe
       _.set(o, path, location.protocol + '//' + location.host + template.replace('KEY', v));
     }
   }
+
+  vm.toggleFavorite = function () {
+    vm.taxon.$promise.then(function () {
+      Favorites.toggle('taxon', vm.taxon.key, vm.taxon.name.scientificName);
+    });
+  };
 
   vm.synonymsConfig = {
     columns: [

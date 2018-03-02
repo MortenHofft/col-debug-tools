@@ -23,6 +23,11 @@ angular
       return jsonMarkup(stripped);
     };
   })
+  .filter('reverse', function () {
+    return function (items) {
+      return items.slice().reverse();
+    };
+  })
   .filter('asApi', function () {
     return function () {
       return '//api.col.plus' + location.pathname + location.search;

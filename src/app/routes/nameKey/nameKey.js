@@ -9,15 +9,21 @@ module.exports = {
 };
 
 /** @ngInject */
-function nameKey($log, $stateParams, $state, NameKey, NameKeyDetails, NameKeyDetailList, NameSearch, DatasetKey) {
+function nameKey($log, $stateParams, $state, NameKey, NameKeyDetails, NameKeyDetailList, Favorites, $localStorage, Message) {
   var vm = this;
+  vm.favorites = Favorites;
+  vm.localStorage = $localStorage;
   vm.name = NameKey.get({key: $stateParams.itemKey});
   vm.synonyms = NameKeyDetailList.get({key: $stateParams.itemKey, detail: 'synonyms'});
 
-  vm.name.$promise.then(function () {
-    var o = angular.fromJson(angular.toJson(vm.name));
-    decorateInfoJson(o);
-    vm.nameJson = jsonMarkup(o);
+  vm.name.$promise
+    .then(function () {
+      var o = angular.fromJson(angular.toJson(vm.name));
+      decorateInfoJson(o);
+      vm.nameJson = jsonMarkup(o);
+    })
+  .catch(function (err) {
+    console.log(err);
   });
 
   function decorateInfoJson(o) {
@@ -34,6 +40,12 @@ function nameKey($log, $stateParams, $state, NameKey, NameKeyDetails, NameKeyDet
       _.set(o, path, location.protocol + '//' + location.host + template.replace('KEY', v));
     }
   }
+
+  vm.toggleFavorite = function () {
+    vm.name.$promise.then(function () {
+      Favorites.toggle('name', vm.name.key, vm.name.scientificName);
+    });
+  };
 
   vm.synonymsConfig = {
     columns: [

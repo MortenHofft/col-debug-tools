@@ -9,8 +9,10 @@ module.exports = {
 };
 
 /** @ngInject */
-function datasetKey($log, $stateParams, $state, DatasetKey) {
+function datasetKey($log, $stateParams, $state, DatasetKey, Favorites, $localStorage) {
   var vm = this;
+  vm.localStorage = $localStorage;
+  vm.favorites = Favorites;
   vm.dataset = DatasetKey.get({key: $stateParams.itemKey});
 
   vm.dataset.$promise.then(function () {
@@ -22,6 +24,12 @@ function datasetKey($log, $stateParams, $state, DatasetKey) {
   function decorateInfoJson(o) {
     // decorate(o, 'datasetKey', '/dataset/KEY');
   }
+
+  vm.toggleFavorite = function () {
+    vm.dataset.$promise.then(function () {
+      Favorites.toggle('dataset', vm.dataset.key, vm.dataset.title);
+    });
+  };
 
   function decorate(o, path, template) {
     var v = _.get(o, path);

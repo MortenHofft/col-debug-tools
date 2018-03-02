@@ -15,7 +15,7 @@
         <div>
             <md-content layout-wrap layout-gt-sm="row" layout-padding class="white">
                 <md-input-container flex-gt-sm="50">
-                    <label>Search table</label>
+                    <label>Search table (q)</label>
                     <input ng-model="$ctrl.state.q">
                 </md-input-container>
                 <md-input-container flex="initial" style="width:200px">
@@ -40,7 +40,9 @@
             </md-content>
             <md-divider></md-divider>
         </div>
-        <table-search-component options="$ctrl.tableConfig"></table-search-component>
+        <md-content layout-padding class="white">
+            <table-search-component options="$ctrl.tableConfig"></table-search-component>
+        </md-content>
 
         <div ng-show="$ctrl.currentNavItem == 'about'">
             <md-content class="md-padding white">

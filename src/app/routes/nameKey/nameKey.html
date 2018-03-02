@@ -11,24 +11,46 @@
             <md-nav-item  md-nav-href="{{ '' | asApi}}" name="about">
                 API
             </md-nav-item>
+            <div flex></div>
+            <md-button class="md-icon-button" aria-label="Favorite" ng-click="$ctrl.toggleFavorite()">
+                <md-icon class="material-icons">favorite</md-icon>
+            </md-button>
         </md-nav-bar>
         <div>
             <md-content class="md-padding white">
                 <section>
                     <h2>Highlights</h2>
-                    <dl>
-                        <dt>Rank</dt>
-                        <dd>{{ $ctrl.name.rank }}</dd>
-
-                        <dt>Scientific name</dt>
-                        <dd>{{ $ctrl.name.scientificName }}</dd>
+                    <dl class="asTable">
+                        <div>
+                            <dt>Rank</dt>
+                            <dd>{{ $ctrl.name.rank }}</dd>
+                        </div>
+                        <div>
+                            <dt>Scientific name</dt>
+                            <dd>{{ $ctrl.name.scientificName }}</dd>
+                        </div>
+                        <div>
+                            <dt>Authorship</dt>
+                            <dd>{{ $ctrl.name.authorship }}</dd>
+                        </div>
+                        <div ng-if="$ctrl.synonyms.length > 0">
+                            <dt>Synonym count</dt>
+                            <dd>{{ $ctrl.synonyms.length }}</dd>
+                        </div>
                     </dl>
                 </section>
-                <section>
-                    <h2>JSON</h2>
-                    <div ng-bind-html="$ctrl.nameJson"></div>
-                </section>
             </md-content>
+
+            <section class="jsonDump clearfix">
+                <div class="pull-right" style="margin:-20px 0">
+                    <md-switch ng-model="$ctrl.localStorage.hideNameJson" aria-label="Switch 1">
+                        Hide JSON
+                    </md-switch>
+                </div>
+                <div ng-if=!$ctrl.localStorage.hideNameJson>
+                    <div ng-bind-html="$ctrl.nameJson"></div>
+                </div>
+            </section>
 
             <md-content class="md-padding white">
                 <section>

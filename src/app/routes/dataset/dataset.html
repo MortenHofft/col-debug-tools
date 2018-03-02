@@ -23,12 +23,10 @@
                 </div>
             </md-content>
             <md-divider></md-divider>
-            <div ng-if="$ctrl.searchResults.$resolved">
-                <h4>Total results: {{$ctrl.searchResults.total | localNumber}}</h4>
-            </div>
         </div>
-
-        <table-search-component options="$ctrl.tableConfig"></table-search-component>
+        <md-content layout-padding class="white">
+            <table-search-component options="$ctrl.tableConfig"></table-search-component>
+        </md-content>
 
     </md-card>
 

@@ -1,0 +1,13 @@
+<div class="messageCenter" ng-if="$ctrl.Message.get().length > 0">
+    <div class="pull-right" style="padding: 5px;">
+        <a href="" ng-click="$ctrl.Message.clearAll()">Clear All</a>
+    </div>
+    <ul>
+        <li ng-repeat="item in $ctrl.Message.get()">
+            <div>
+                Recieved status code {{item.status}} for <a ng-href="{{item.url}}">{{item.url}}</a>
+                <div ng-if="item.message">{{item.message}}</div>
+            </div>
+        </li>
+    </ul>
+</div>

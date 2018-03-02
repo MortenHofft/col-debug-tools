@@ -2,24 +2,15 @@ var _ = require('lodash');
 
 var environments = {
   prod: {
-    dataApi: 'https://api.gbif.org/v1',
-    iptProxy: 'https://www.gbif-uat.org/api/installation/ipt/inventory/dataset',
-    crawler: 'https://crawler.gbif.org',
-    portal: 'https://www.gbif.org',
+    colApi: '//api.col.plus/',
     env: 'prod'
   },
   uat: {
-    dataApi: 'https://api.gbif-uat.org/v1',
-    iptProxy: 'https://www.gbif-uat.org/api/installation/ipt/inventory/dataset',
-    crawler: 'https://crawler.gbif-uat.org',
-    portal: 'https://www.gbif-uat.org',
+    colApi: '//api.col.plus/',
     env: 'uat'
   },
   dev: {
-    dataApi: 'https://api.gbif-dev.org/v1',
-    iptProxy: 'https://www.gbif-uat.org/api/installation/ipt/inventory/dataset',
-    crawler: 'https://crawler.gbif-dev.org',
-    portal: 'https://www.gbif-dev.org',
+    colApi: '//api.col.plus/',
     env: 'dev'
   }
 };
@@ -29,9 +20,9 @@ var domain = window.location.hostname;
 /*eslint-enable */
 
 var env = environments.prod;
-if (_.endsWith(domain, 'gbif-uat.org')) {
+if (_.endsWith(domain, 'col-uat.plus')) {
   env = environments.uat;
-} else if (_.endsWith(domain, 'gbif-dev.org')) {
+} else if (_.endsWith(domain, 'col-dev.plus')) {
   env = environments.dev;
 }
 
