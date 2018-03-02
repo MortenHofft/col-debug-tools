@@ -26,6 +26,18 @@
                             <dt>Title</dt>
                             <dd>{{ $ctrl.dataset.title }}</dd>
                         </div>
+                        <div>
+                            <dt>Description</dt>
+                            <dd>{{ $ctrl.dataset.description | limitTo:200 }} ...</dd>
+                        </div>
+                        <div ng-if="$ctrl.datasetImport[0]">
+                            <dt>Name count</dt>
+                            <dd>{{ ($ctrl.datasetImport[0].nameCount || 0) | localNumber }}</dd>
+                        </div>
+                        <div ng-if="$ctrl.datasetImport[0]">
+                            <dt>Taxon count</dt>
+                            <dd>{{ ($ctrl.datasetImport[0].taxonCount || 0) | localNumber }}</dd>
+                        </div>
                     </dl>
                 </section>
             </md-content>
@@ -39,8 +51,22 @@
             </div>
             <div ng-if=!$ctrl.localStorage.hideDatasetJson>
                 <div ng-bind-html="$ctrl.datasetJson"></div>
+                <h4>Dataset import</h4>
+                <div ng-bind-html="$ctrl.datasetImportJson"></div>
             </div>
         </section>
+
+        <md-content class="md-padding white">
+            <section ng-repeat="chart in $ctrl.chartFields" class="simpleBarChart" ng-if="$ctrl.datasetImport[0][chart]">
+                <h4>{{chart | prettifyEnum}}</h4>
+                <div>
+                    <div class="simpleBarChart_row" ng-repeat="(field, value) in $ctrl.datasetImport[0][chart]">
+                        <span class="simpleBarChart_name"><span style="color:#aaa">{{value | localNumber}}</span> {{field}}</span>
+                        <span class="simpleBarChart_bar"><span style="width:{{$ctrl.getWidth(value, chart)}}%"></span></span>
+                    </div>
+                </div>
+            </section>
+        </md-content>
 
     </md-card>
 

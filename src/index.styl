@@ -259,3 +259,38 @@ dl.asTable {
     content: ' \276f ';
   }
 }
+
+
+.simpleBarChart {
+  h4 {
+    text-transform: uppercase;
+    color: #828282;
+    margin-left: 230px;
+  }
+  .simpleBarChart_row {
+    text-transform: capitalize;
+    display: flex;
+  }
+  .simpleBarChart_name, .simpleBarChart_bar {
+    padding: 10px;
+  }
+  .simpleBarChart_name {
+    display: inline-block;
+    width: 200px;
+    flex: 0 0 auto;
+    text-align: right;
+  }
+  .simpleBarChart_bar {
+    display: inline-block;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 400px;
+    >span {
+      display: inline-block;
+      background: deepskyblue;
+      color: white;
+      border-radius: 4px;
+      padding: 5px;
+    }
+  }
+}

@@ -106,17 +106,17 @@ angular
       }
     });
   })
-    .factory('Dataset', function ($resource, Message) {
-      return $resource(API + 'dataset', null, {
-        query: {
-          method: 'GET',
-          isArray: false,
-          cancellable: true,
-          cache: true,
-          interceptor: {responseError: errorHandler(Message)}
-        }
-      });
-    })
+  .factory('Dataset', function ($resource, Message) {
+    return $resource(API + 'dataset', null, {
+      query: {
+        method: 'GET',
+        isArray: false,
+        cancellable: true,
+        cache: true,
+        interceptor: {responseError: errorHandler(Message)}
+      }
+    });
+  })
   .factory('DatasetKey', function ($resource, Message) {
     return $resource(API + 'dataset/:key', null, {
       query: {
@@ -130,4 +130,19 @@ angular
         interceptor: {responseError: errorHandler(Message)}
       }
     });
-  });
+  })
+  .factory('DatasetKeyImport', function ($resource, Message) {
+    return $resource(API + 'dataset/:key/import', null, {
+      query: {
+        method: 'GET',
+        isArray: true,
+        cancellable: true,
+        cache: true,
+        interceptor: {responseError: errorHandler(Message)}
+      },
+      get: {
+        interceptor: {responseError: errorHandler(Message)}
+      }
+    });
+  })
+;

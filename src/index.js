@@ -66,3 +66,4 @@ require('./resources.config');
 // services
 require('./favorites.service');
 require('./message.service');
+// require('./highcharts.factory');

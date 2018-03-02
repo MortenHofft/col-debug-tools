@@ -1,5 +1,6 @@
 var angular = require('angular');
 var jsonMarkup = require('json-markup');
+var changeCase = require('change-case');
 
 /** @ngInject */
 angular
@@ -21,6 +22,14 @@ angular
     return function (o) {
       var stripped = angular.fromJson(angular.toJson(o));
       return jsonMarkup(stripped);
+    };
+  })
+  .filter('prettifyEnum', function () {
+    return function (text) {
+      if (angular.isUndefined(text)) {
+        return '';
+      }
+      return changeCase.sentenceCase(text);
     };
   })
   .filter('reverse', function () {
