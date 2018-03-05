@@ -1,6 +1,16 @@
 # col-debug-tools
 An internal tool for debugging COL during development. For usage, changing and discarding at Markus Döring's will.
 
+## Features and scope
+The interface is inteded to reflect the API closely. Paging for example is labelled `offset+20`.
+
+Short introduction:
+* in search results the 3 dots will expand the row to show the JSON response.
+* On individual taxons/names/datasets the full JSON dump is (optionally showed) but rewritten a bit so that keys are displayed as the link to their corresponding item. This is to ease navigation for not highlighted values.
+* The heart. This will add an item to your favorites (shows up in the menu) and is there to ease testing and demoing.
+* API failures. If the API returns status code >399 then these calls will show up in in the bottom of the screen as warnings as this is considered unexpected aPI behaviour.
+* The API tab will link to the corresponding API call for that page (the interface might show data from addition calls)
+
 ## Running the project
 
 ### Requirement Node 6.12.2 && NPM 3+
