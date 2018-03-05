@@ -1,11 +1,4 @@
 var _ = require('lodash');
-var async = require('async');
-
-var rank = ['KINGDOM', 'PHYLUM', 'SUBPHYLUM', 'CLASS', 'SUBCLASS', 'ORDER', 'SUBORDER', 'SUPERFAMILY', 'FAMILY', 'SUBFAMILY', 'TRIBE', 'SUBTRIBE', 'GENUS', 'SUBGENUS', 'SECTION', 'SPECIES', 'SUBSPECIES', 'VARIETY', 'SUBVARIETY', 'FORM', 'SUBFORM'];
-var nomstatus = ['LEGITIMATE', 'VARIANT', 'REPLACEMENT', 'CONSERVED', 'PROTECTED', 'UNAVAILABLE', 'NAKED', 'FORGOTTEN', 'ILLEGITIMATE', 'SUPERFLUOUS', 'REJECTED', 'DOUBTFUL', 'MANUSCRIPT', 'CHRESONYM', 'UNEVALUATED'];
-var taxstatus = ['ACCEPTED', 'DOUBTFUL'];
-var type = ['SCIENTIFIC', 'VIRUS', 'HYBRID-FORMULA', 'CULTIVAR', 'OTU', 'PLACEHOLDER', 'NONE'];
-var issue = ['UNPARSABLE_NAME', 'PARTIALLY_PARSABLE_NAME', 'UNPARSABLE_AUTHORSHIP', 'DOUBTFUL_NAME', 'INCONSISTENT_AUTHORSHIP', 'INCONSISTENT_NAME', 'UNUSUAL_CHARACTERS', 'NULL_EPITHET', 'SUBSPECIES_ASSIGNED', 'LC_MONOMIAL', 'INDET_CULTIVAR', 'INDET_SPECIES', 'INDET_INFRASPECIES', 'HIGHER_RANK_BINOMIAL', 'QUESTION_MARKS_REMOVED', 'REPL_ENCLOSING_QUOTE', 'MISSING_GENUS', 'HTML_ENTITIES', 'XML_ENTITIES', 'NOMENCLATURAL_STATUS_INVALID', 'NOMENCLATURAL_CODE_INVALID', 'BASIONYM_AUTHOR_MISMATCH', 'BASIONYM_NOT_UNIQUE', 'BASIONYM_DERIVED', 'CONFLICTING_BASIONYM_COMBINATION', 'POTENTIAL_ORTHOGRAPHIC_VARIANT', 'HOMONYM', 'PUBLISHED_BEFORE_GENUS', 'REFERENCE_ID_INVALID', 'ID_NOT_UNIQUE', 'PARENT_ID_INVALID', 'ACCEPTED_ID_INVALID', 'BASIONYM_ID_INVALID', 'ACCEPTED_NAME_MISSING', 'RANK_INVALID', 'TAXONOMIC_STATUS_INVALID', 'LIFEZONE_INVALID', 'IS_FOSSIL_INVALID', 'IS_RECENT_INVALID', 'URL_INVALID', 'ACCORDING_TO_DATE_INVALID', 'CHAINED_SYNOYM', 'TAXONOMIC_STATUS_MISMATCH', 'PARENT_CYCLE', 'CLASSIFICATION_RANK_ORDER_INVALID', 'CLASSIFICATION_NOT_APPLIED', 'VERNACULAR_NAME_INVALID', 'VERNACULAR_NAME_TRANSLITERATED', 'DESCRIPTION_INVALID', 'DISTRIBUTION_INVALID', 'DISTRIBUTION_AREA_INVALID', 'DISTRIBUTION_COUNTRY_INVALID', 'DISTRIBUTION_STATUS_INVALID', 'DISTRIBUTION_GAZETEER_INVALID', 'SPECIES_PROFILE_INVALID', 'MULTIMEDIA_INVALID', 'BIB_REFERENCE_INVALID', 'ALT_IDENTIFIER_INVALID', 'BACKBONE_MATCH_NONE', 'BACKBONE_MATCH_FUZZY', 'NAME_NOT_UNIQUE', 'PARENT_NAME_NOT_UNIQUE', 'RELATIONSHIP_MISSING', 'NO_SPECIES', 'NAME_PARENT_MISMATCH', 'ORTHOGRAPHIC_VARIANT'];
 
 module.exports = {
   template: require('./nameSearch.html'),
@@ -13,29 +6,55 @@ module.exports = {
 };
 
 /** @ngInject */
-function nameSearch($log, $stateParams, $state, NameSearch, DatasetKey) {
+function nameSearch($q, $log, $stateParams, $state, NameSearch, DatasetKey, Dataset, VocabType, Helper) {
   var vm = this;
   vm.api = '//api.col.plus';
   vm.state = $stateParams;
-  vm.rank = rank;
-  vm.nomstatus = nomstatus;
-  vm.taxstatus = taxstatus;
-  vm.type = type;
-  vm.issue = issue;
+  vm.helper = Helper;
+
+  vm.rank = VocabType.query({type: 'rank'});
+  vm.nomstatus = VocabType.query({type: 'nomstatus'});
+  vm.taxstatus = VocabType.query({type: 'taxstatus'});
+  vm.type = VocabType.query({type: 'type'});
+  vm.issue = VocabType.query({type: 'issue'});
+
   vm.optionFilters = ['rank', 'nomstatus', 'taxstatus', 'type', 'issue'];
 
   vm.limit = _.toSafeInteger($stateParams.limit) || 20;
   vm.offset = _.toSafeInteger($stateParams.offset) || 0;
 
-  var q = _.assign({}, $stateParams, {limit: vm.limit, offset: vm.offset});
-  vm.searchResults = NameSearch.query(q);
+  if ($stateParams.datasetKey) {
+    DatasetKey.get({key: $stateParams.datasetKey}).$promise
+    .then(function (e) {
+      vm.selectedDatasetItem = e;
+      vm.searchText = e.title;
+    })
+    .catch(function (e) {
+    });
+  }
+
+  function getQueryParams() {
+    var datasetKey = _.get(vm.selectedDatasetItem, 'key', undefined);
+    var paging = {limit: vm.limit, offset: vm.offset};
+    if (datasetKey) {
+      paging.datasetKey = datasetKey;
+    }
+    var q = _.assign({}, $stateParams, paging);
+    return q;
+  }
+
+  vm.searchResults = NameSearch.query(getQueryParams());
 
   vm.search = function (keepOffset) {
     if (!keepOffset) {
       vm.offset = undefined;
     }
-    var q = _.assign({}, $stateParams, {limit: vm.limit, offset: vm.offset});
+    var q = getQueryParams();
     $state.go('nameSearch', q);
+  };
+
+  vm.clear = function () {
+    $state.go('nameSearch', {}, {inherit: false});
   };
 
   function customDecoration(item, callback) {
@@ -50,6 +69,19 @@ function nameSearch($log, $stateParams, $state, NameSearch, DatasetKey) {
         callback();
       });
   }
+
+  vm.querySearch = function (query) {
+    var deferred = $q.defer();
+    Dataset.query({q: query}).$promise
+    .then(function (e) {
+      console.log(e);
+      deferred.resolve(e.result || []);
+    })
+    .catch(function (err) {
+      deferred.reject(err);
+    });
+    return deferred.promise;
+  };
 
   vm.tableConfig = {
     resource: NameSearch,

@@ -21,9 +21,7 @@ var taxonKey = require('./app/routes/taxonKey/taxonKey');
 var taxonChildren = require('./app/routes/taxonChildren/taxonChildren');
 var dataset = require('./app/routes/dataset/dataset');
 var datasetKey = require('./app/routes/datasetKey/datasetKey');
-// var IptSyncState = require('./app/routes/iptSyncState/iptSyncState');
-// var Overcrawls = require('./app/routes/overcrawls/Overcrawls');
-// var CurrentCrawls = require('./app/routes/currentCrawls/CurrentCrawls');
+var settings = require('./app/routes/settings/settings');
 
 // components
 var Header = require('./app/components/Header');
@@ -49,10 +47,7 @@ angular
   .component('taxonChildren', taxonChildren)
   .component('dataset', dataset)
   .component('datasetKey', datasetKey)
-  // .component('speciesTree', SpeciesTree)
-  // .component('speciesKey', SpeciesKey)
-  // .component('datasetSearch', DatasetSearch)
-  // .component('datasetKey', DatasetKey)
+  .component('settings', settings)
   .component('headerComponent', Header)
   .component('tableComponent', Table)
   .component('tableSearchComponent', TableSearch)
@@ -66,4 +61,4 @@ require('./resources.config');
 // services
 require('./favorites.service');
 require('./message.service');
-// require('./highcharts.factory');
+require('./helper.service');

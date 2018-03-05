@@ -1,0 +1,20 @@
+<div class="card-area">
+    <md-card>
+        <md-nav-bar
+                md-no-ink-bar="disableInkBar"
+                md-selected-nav-item="$ctrl.currentNavItem"
+                nav-bar-aria-label="navigation links">
+            <md-nav-item  md-nav-click="goto('page1')"  name="tool">
+                Settings
+            </md-nav-item>
+        </md-nav-bar>
+        <div>
+            <md-content class="md-padding white">
+                <div>
+                    <md-button class="md-raised md-primary" ng-click="$ctrl.reset()">Reset to defaults</md-button>
+                </div>
+            </md-content>
+            <md-divider></md-divider>
+        </div>
+    </md-card>
+</div>

@@ -1,4 +1,3 @@
-var about = require('./about.md');
 var _ = require('lodash');
 
 module.exports = {
@@ -7,10 +6,11 @@ module.exports = {
 };
 
 /** @ngInject */
-function dataset($log, $stateParams, $state, Dataset) {
+function dataset($log, $stateParams, $state, Dataset, Helper) {
   var vm = this;
   vm.api = '//api.col.plus';
   vm.state = $stateParams;
+  vm.helper = Helper;
 
   vm.limit = _.toSafeInteger($stateParams.limit) || 20;
   vm.offset = _.toSafeInteger($stateParams.offset) || 0;

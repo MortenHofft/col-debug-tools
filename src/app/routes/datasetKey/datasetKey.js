@@ -1,6 +1,4 @@
-var about = require('./about.md');
 var _ = require('lodash');
-var async = require('async');
 var jsonMarkup = require('json-markup');
 
 module.exports = {

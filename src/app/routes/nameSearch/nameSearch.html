@@ -7,7 +7,7 @@
             <md-nav-item md-nav-href="#" name="tool">
                 Name search
             </md-nav-item>
-            <md-nav-item  md-nav-href="{{ '' | asApi}}" name="about">
+            <md-nav-item md-nav-href="#" ng-click="$ctrl.helper.gotoApi()" name="API">
                 API
             </md-nav-item>
         </md-nav-bar>
@@ -18,11 +18,27 @@
                     <label>Search table (q)</label>
                     <input ng-model="$ctrl.state.q">
                 </md-input-container>
-                <md-input-container flex="initial" style="width:200px">
-                    <label>Dataset key</label>
-                    <input ng-model="$ctrl.state.datasetKey">
-                </md-input-container>
 
+                <md-autocomplete flex-gt-sm="50"
+                        ng-disabled="$ctrl.isDisabled"
+                        md-no-cache="$ctrl.noCache"
+                        md-selected-item="$ctrl.selectedDatasetItem"
+                        md-search-text-change="$ctrl.searchTextChange($ctrl.searchText)"
+                        md-search-text="$ctrl.searchText"
+                        md-selected-item-change="$ctrl.selectedItemChange(item)"
+                        md-items="item in $ctrl.querySearch($ctrl.searchText)"
+                        md-item-text="item.title"
+                        md-min-length="0"
+                        placeholder="Dataset">
+                    <md-item-template>
+                        <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.title}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No matches found
+                    </md-not-found>
+                </md-autocomplete>
+            </md-content>
+            <md-content layout-wrap layout-gt-sm="row" layout-padding class="white">
                 <md-input-container ng-repeat="optionType in $ctrl.optionFilters">
                     <label>{{optionType}}</label>
                     <md-select ng-model="$ctrl.state[optionType]">
@@ -36,6 +52,9 @@
                 </md-input-container>
                 <div>
                     <md-button class="md-raised md-primary" ng-click="$ctrl.search()">Search</md-button>
+                </div>
+                <div>
+                    <md-button class="md-raised" ng-click="$ctrl.clear()">Clear</md-button>
                 </div>
             </md-content>
             <md-divider></md-divider>

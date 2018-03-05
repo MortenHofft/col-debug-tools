@@ -2,15 +2,15 @@ var _ = require('lodash');
 
 var environments = {
   prod: {
-    colApi: '//api.col.plus/',
+    colApi: '//api.col.plus',
     env: 'prod'
   },
   uat: {
-    colApi: '//api.col.plus/',
+    colApi: '//api.col.plus',
     env: 'uat'
   },
   dev: {
-    colApi: '//api.col.plus/',
+    colApi: '//api.col.plus',
     env: 'dev'
   }
 };

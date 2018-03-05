@@ -1,6 +1,4 @@
-var about = require('./about.md');
 var _ = require('lodash');
-var async = require('async');
 var jsonMarkup = require('json-markup');
 
 module.exports = {
@@ -9,22 +7,25 @@ module.exports = {
 };
 
 /** @ngInject */
-function nameKey($log, $stateParams, $state, NameKey, NameKeyDetails, NameKeyDetailList, Favorites, $localStorage, Message) {
+function nameKey($log, $stateParams, $state, NameKey, NameKeyDetails, NameKeyDetailList, Favorites, $localStorage, Taxon) {
   var vm = this;
   vm.favorites = Favorites;
   vm.localStorage = $localStorage;
   vm.name = NameKey.get({key: $stateParams.itemKey});
   vm.synonyms = NameKeyDetailList.get({key: $stateParams.itemKey, detail: 'synonyms'});
+  vm.taxon = Taxon.query({nameKey: $stateParams.itemKey});
 
   vm.name.$promise
     .then(function () {
       var o = angular.fromJson(angular.toJson(vm.name));
       decorateInfoJson(o);
       vm.nameJson = jsonMarkup(o);
-    })
-  .catch(function (err) {
-    console.log(err);
-  });
+
+      var basionymKey = vm.name.basionymKey;
+      if (basionymKey) {
+        vm.basionym = NameKey.get({key: basionymKey});
+      }
+    });
 
   function decorateInfoJson(o) {
     decorate(o, 'datasetKey', '/dataset/KEY');

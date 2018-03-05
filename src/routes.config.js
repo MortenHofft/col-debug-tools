@@ -31,12 +31,16 @@ function routesConfig($stateProvider, $urlRouterProvider, $locationProvider) {
     url: '/children?offset&limit',
     component: 'taxonChildren'
   })
-    .state('dataset', {
-      url: '/dataset?q&offset&limit',
-      component: 'dataset'
-    })
-    .state('datasetKey', {
-      url: '/dataset/:itemKey',
-      component: 'datasetKey'
-    });
+  .state('dataset', {
+    url: '/dataset?q&offset&limit',
+    component: 'dataset'
+  })
+  .state('datasetKey', {
+    url: '/dataset/:itemKey',
+    component: 'datasetKey'
+  })
+  .state('settings', {
+    url: '/settings',
+    component: 'settings'
+  });
 }

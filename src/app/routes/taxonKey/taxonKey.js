@@ -1,6 +1,4 @@
-var about = require('./about.md');
 var _ = require('lodash');
-var async = require('async');
 var jsonMarkup = require('json-markup');
 
 module.exports = {
@@ -9,7 +7,7 @@ module.exports = {
 };
 
 /** @ngInject */
-function taxonKey($http, $log, $stateParams, $state, TaxonKey, TaxonKeyDetails, TaxonKeyDetailList, Favorites, $localStorage) {
+function taxonKey($http, $log, $stateParams, $state, env, TaxonKey, TaxonKeyDetails, TaxonKeyDetailList, Taxon, Favorites, $localStorage, Message) {
   var vm = this;
   vm.favorites = Favorites;
   vm.localStorage = $localStorage;
@@ -21,9 +19,12 @@ function taxonKey($http, $log, $stateParams, $state, TaxonKey, TaxonKeyDetails, 
   vm.classification = TaxonKeyDetailList.query({key: $stateParams.itemKey, detail: 'classification'});
   vm.synonyms2 = TaxonKeyDetailList.query({key: $stateParams.itemKey, detail: 'classification'});
 
-  $http.get('//api.col.plus/taxon/' + $stateParams.itemKey + '/synonyms', {query: {key: $stateParams.itemKey, detail: 'synonyms'}})
+  $http.get(env.colApi + '/taxon/' + $stateParams.itemKey + '/synonyms', {query: {key: $stateParams.itemKey, detail: 'synonyms'}})
     .then(function (response) {
       vm.synonyms = response.data;
+    })
+    .catch(function (err) {
+      Message.add(err, 'Unble to get taxon synonyms');
     });
 
   vm.info.$promise.then(function () {

@@ -37,6 +37,12 @@
                             <dt>Synonym count</dt>
                             <dd>{{ $ctrl.synonyms.length }}</dd>
                         </div>
+                        <div ng-if="$ctrl.basionym">
+                            <dt>Basionym</dt>
+                            <dd>
+                                <a ng-href="/name/{{$ctrl.basionym.key}}">{{$ctrl.basionym.scientificName}}</a>
+                            </dd>
+                        </div>
                     </dl>
                 </section>
             </md-content>
@@ -52,7 +58,7 @@
                 </div>
             </section>
 
-            <md-content class="md-padding white">
+            <md-content class="md-padding white" ng-if="$ctrl.synonyms.length > 0">
                 <section>
                     <h2>Synonyms</h2>
                     <table-component options="$ctrl.synonymsConfig" results="$ctrl.synonyms"></table-component>

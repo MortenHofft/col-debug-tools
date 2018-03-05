@@ -2,8 +2,6 @@
 
 var angular = require('angular');
 
-var API = 'http://api.col.plus/';
-
 function errorHandler(Message) {
   return function (err) {
     Message.add(err);
@@ -13,19 +11,23 @@ function errorHandler(Message) {
 /** @ngInject */
 angular
   .module('app')
-  .factory('NameSearch', function ($resource, Message) {
-    return $resource(API + 'name/search', null, {
+  .factory('NameSearch', function ($resource, Message, env) {
+    return $resource(env.colApi + '/name/search', null, {
       query: {
         method: 'GET',
         isArray: false,
         cancellable: true,
         cache: true,
         interceptor: {responseError: errorHandler(Message)}
+      },
+      get: {
+        method: 'GET',
+        interceptor: {responseError: errorHandler(Message)}
       }
     });
   })
-  .factory('NameKey', function ($resource, Message) {
-    return $resource(API + 'name/:key', null, {
+  .factory('NameKey', function ($resource, Message, env) {
+    return $resource(env.colApi + '/name/:key', null, {
       query: {
         method: 'GET',
         isArray: false,
@@ -38,8 +40,8 @@ angular
       }
     });
   })
-  .factory('NameKeyDetails', function ($resource, Message) {
-    return $resource(API + 'name/:key/:detail', null, {
+  .factory('NameKeyDetails', function ($resource, Message, env) {
+    return $resource(env.colApi + '/name/:key/:detail', null, {
       query: {
         method: 'GET',
         isArray: false,
@@ -52,8 +54,8 @@ angular
       }
     });
   })
-  .factory('NameKeyDetailList', function ($resource, Message) {
-    return $resource(API + 'name/:key/:detail', null, {
+  .factory('NameKeyDetailList', function ($resource, Message, env) {
+    return $resource(env.colApi + '/name/:key/:detail', null, {
       query: {
         method: 'GET',
         isArray: true,
@@ -68,30 +70,67 @@ angular
       }
     });
   })
-  .factory('TaxonKey', function ($resource, Message) {
-    return $resource(API + 'taxon/:key', null, {
+.factory('VocabType', function ($resource, Message, env) {
+  return $resource(env.colApi + '/vocab/:type', null, {
+    query: {
+      method: 'GET',
+      isArray: true,
+      cancellable: true,
+      cache: true,
+      interceptor: {responseError: errorHandler(Message)}
+    },
+    get: {
+      interceptor: {responseError: errorHandler(Message)}
+    }
+  });
+})
+  .factory('Taxon', function ($resource, Message, env) {
+    return $resource(env.colApi + '/taxon/', null, {
       query: {
         method: 'GET',
         isArray: false,
         cancellable: true,
         cache: true,
         interceptor: {responseError: errorHandler(Message)}
+      },
+      get: {
+        method: 'GET',
+        interceptor: {responseError: errorHandler(Message)}
       }
     });
   })
-  .factory('TaxonKeyDetails', function ($resource, Message) {
-    return $resource(API + 'taxon/:key/:detail', null, {
+  .factory('TaxonKey', function ($resource, Message, env) {
+    return $resource(env.colApi + '/taxon/:key', null, {
       query: {
         method: 'GET',
         isArray: false,
         cancellable: true,
         cache: true,
         interceptor: {responseError: errorHandler(Message)}
+      },
+      get: {
+        method: 'GET',
+        interceptor: {responseError: errorHandler(Message)}
       }
     });
   })
-  .factory('TaxonKeyDetailList', function ($resource, Message) {
-    return $resource(API + 'taxon/:key/:detail', null, {
+  .factory('TaxonKeyDetails', function ($resource, Message, env) {
+    return $resource(env.colApi + '/taxon/:key/:detail', null, {
+      query: {
+        method: 'GET',
+        isArray: false,
+        cancellable: true,
+        cache: true,
+        interceptor: {responseError: errorHandler(Message)}
+      },
+      get: {
+        method: 'GET',
+        interceptor: {responseError: errorHandler(Message)}
+      }
+    });
+  })
+  .factory('TaxonKeyDetailList', function ($resource, Message, env) {
+    return $resource(env.colApi + '/taxon/:key/:detail', null, {
       query: {
         method: 'GET',
         isArray: true,
@@ -106,19 +145,23 @@ angular
       }
     });
   })
-  .factory('Dataset', function ($resource, Message) {
-    return $resource(API + 'dataset', null, {
+  .factory('Dataset', function ($resource, Message, env) {
+    return $resource(env.colApi + '/dataset', null, {
       query: {
         method: 'GET',
         isArray: false,
         cancellable: true,
         cache: true,
         interceptor: {responseError: errorHandler(Message)}
+      },
+      get: {
+        method: 'GET',
+        interceptor: {responseError: errorHandler(Message)}
       }
     });
   })
-  .factory('DatasetKey', function ($resource, Message) {
-    return $resource(API + 'dataset/:key', null, {
+  .factory('DatasetKey', function ($resource, Message, env) {
+    return $resource(env.colApi + '/dataset/:key', null, {
       query: {
         method: 'GET',
         isArray: false,
@@ -131,8 +174,8 @@ angular
       }
     });
   })
-  .factory('DatasetKeyImport', function ($resource, Message) {
-    return $resource(API + 'dataset/:key/import', null, {
+  .factory('DatasetKeyImport', function ($resource, Message, env) {
+    return $resource(env.colApi + '/dataset/:key/import', null, {
       query: {
         method: 'GET',
         isArray: true,
